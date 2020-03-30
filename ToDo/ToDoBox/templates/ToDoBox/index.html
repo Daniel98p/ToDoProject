@@ -2,4 +2,9 @@
 
 {% block content %}
 <h1> My List </h1>
+<form action="/todo/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Dodaj czynność">
+</form>
 {% endblock %}
