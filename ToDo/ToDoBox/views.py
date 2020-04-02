@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .forms import TextForm
 from .models import ToDoText
 from django.http import HttpResponseRedirect
+from datetime import date
 
 
 def index(request):
@@ -13,4 +14,7 @@ def index(request):
         return HttpResponseRedirect('/todo')
     else:
         form = TextForm()
-    return render(request, 'ToDoBox/index.html', {"form": form})
+    all_todo_objects_today = ToDoText.objects.filter(data=date.today())
+    return render(request, 'ToDoBox/index.html', {"form": form, "all_todo_objects_today": all_todo_objects_today})
+
+
