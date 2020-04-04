@@ -18,3 +18,7 @@ def index(request):
     return render(request, 'ToDoBox/index.html', {"form": form, "all_todo_objects_today": all_todo_objects_today})
 
 
+def delete_todo(request, obj_id):
+    deleted_item = ToDoText.objects.get(pk=obj_id)
+    deleted_item.delete()
+    return HttpResponseRedirect('/todo/')

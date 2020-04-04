@@ -8,12 +8,15 @@
     <input type="submit" value="Dodaj czynność">
 </form>
 
-<ul>
-    {% for object in all_todo_objects_today %}
+<ol>
+    {% for item in all_todo_objects_today %}
     <li>
-        {{object.text}}
+        {{item.text}}
+        <form action="delete/{{item.id}}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Usuń">
+        </form>
     </li>
     {% endfor %}
-</ul>
-
+</ol>
 {% endblock %}
