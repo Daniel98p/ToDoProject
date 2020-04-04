@@ -1,0 +1,22 @@
+{% extends "ToDoBox/base.html" %}
+
+{% block content %}
+<h1> My List </h1>
+<form action="/todo/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Dodaj czynność">
+</form>
+
+<ol>
+    {% for item in all_todo_objects_today %}
+    <li>
+        {{item.text}}
+        <form action="delete/{{item.id}}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Usuń">
+        </form>
+    </li>
+    {% endfor %}
+</ol>
+{% endblock %}
