@@ -22,3 +22,7 @@ def delete_todo(request, obj_id):
     deleted_item = ToDoText.objects.get(pk=obj_id)
     deleted_item.delete()
     return HttpResponseRedirect('/todo/')
+
+
+def display(request):
+    return render(request, 'TodoBox/display.html', {})
