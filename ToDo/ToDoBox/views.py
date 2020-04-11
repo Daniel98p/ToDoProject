@@ -1,7 +1,7 @@
 import pandas as pd
 import datetime
 from plotly.offline import plot
-from plotly.graph_objs import Scatter
+from plotly.graph_objs import Bar
 from django.shortcuts import render
 from .forms import TextForm
 from .models import ToDoText
@@ -30,12 +30,12 @@ def delete_todo(request, obj_id):
 def display(request):
     start_day = datetime.date.today() - datetime.timedelta(days=5)
     end_day = datetime.date.today()
-    items = ToDoText.objects.filter(data__range=(start_day, end_day)).values()
+    items = ToDoText.objects.filter(data__gte=start_day, data__lt=end_day).values()
     items = list(items)
     df = pd.DataFrame(items)
     x_data = df["data"]
     y_data = df.groupby('data').size()
-    df_plot = plot([Scatter(x=x_data, y=y_data)], output_type='div', include_plotlyjs=False,
+    df_plot = plot([Bar(x=x_data, y=y_data)], output_type='div', include_plotlyjs=False,
                    show_link=False, link_text="")
 
     return render(request, 'TodoBox/display.html', {"items": items, "df_plot": df_plot})
