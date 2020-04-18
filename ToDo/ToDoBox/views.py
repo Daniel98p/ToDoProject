@@ -1,10 +1,9 @@
-import pandas as pd
 import datetime
-from plotly.offline import plot
-from plotly.graph_objs import Scatter
 from django.shortcuts import render
 from .forms import TextForm
 from .models import ToDoText
+from django.db.models import Count
+from django.http import JsonResponse
 from django.http import HttpResponseRedirect
 
 
@@ -17,7 +16,7 @@ def index(request):
         return HttpResponseRedirect('/todo')
     else:
         form = TextForm()
-    all_todo_objects_today = ToDoText.objects.filter(data=datetime.date.today())
+    all_todo_objects_today = ToDoText.objects.filter(date=datetime.date.today())
     return render(request, 'ToDoBox/index.html', {"form": form, "all_todo_objects_today": all_todo_objects_today})
 
 
@@ -28,14 +27,24 @@ def delete_todo(request, obj_id):
 
 
 def display(request):
-    start_day = datetime.date.today() - datetime.timedelta(days=5)
-    end_day = datetime.date.today()
-    items = ToDoText.objects.filter(data__range=(start_day, end_day)).values()
-    items = list(items)
-    df = pd.DataFrame(items)
-    x_data = df["data"]
-    y_data = df.groupby('data').size()
-    df_plot = plot([Scatter(x=x_data, y=y_data)], output_type='div', include_plotlyjs=False,
-                   show_link=False, link_text="")
+    return render(request, 'ToDoBox/display.html')
 
-    return render(request, 'TodoBox/display.html', {"items": items, "df_plot": df_plot})
+
+def activities_chart(request):
+    labels = []
+    data = []
+    start_day = datetime.date.today() - datetime.timedelta(days=8)
+    items = ToDoText.objects.values('date').annotate(number_of_activities=Count('date')).filter(date__gt=start_day)
+    for number in range(7, -1, -1):
+        temp_today = datetime.date.today() - datetime.timedelta(days=number)
+        labels.append(temp_today)
+    for date in labels:
+        for item in items:
+            if item["date"] == date:
+                data.append(item['number_of_activities'])
+                break
+            else:
+                if item == list(items)[-1]:
+                    data.append(0)
+                continue
+    return JsonResponse(data={"labels": labels, "data": data})
