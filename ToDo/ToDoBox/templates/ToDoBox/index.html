@@ -1,7 +1,7 @@
-{% extends "ToDoBox/base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
-<h1> My List </h1>
+<h1> Lista dzisiejszych aktywnosci </h1>
 <form action="/todo/" method="post">
     {% csrf_token %}
     {{ form }}
@@ -20,4 +20,12 @@
     {% endfor %}
 </ol>
 <a href="{% url 'display' %}"> Wykonane czynnosci </a>
+<p> Podstawowe statystyki z ostatniego tygodnia (srednia, maksimum z jednego dnia oraz suma): </p>
+<ol>
+    {% for statistic in stats %}
+    <li>
+        {{statistic}}
+    </li>
+    {% endfor %}
+</ol>
 {% endblock %}
