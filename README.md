@@ -1,0 +1,1 @@
+This is basic version of TODO app. User can e.g add and delete activity or display weekly activities chart.  
