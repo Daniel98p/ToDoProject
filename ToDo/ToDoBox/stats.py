@@ -12,7 +12,10 @@ def get_max(func):
     activities = []
     for item in items:
         activities.append(item["number_of_activities"])
-    max_value = max(activities)
+    if len(activities) > 0:
+        max_value = max(activities)
+    else:
+        max_value = 0
     return max_value
 
 
